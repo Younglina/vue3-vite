@@ -28,7 +28,7 @@ const props = defineProps({
 })
 const router = useRouter()
 const toDetail = id => {
-  router.push({ name: 'PlayList', params: { id } })
+  router.push({ name: 'Info', params: { id } })
 }
 </script>
 <style lang="scss" scoped>
