@@ -1,5 +1,5 @@
 import Axios from 'axios'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { getCookie } from '@/utils/useTool.js'
 // const baseURL = process.env.NODE_ENV === 'production'?import.meta.env.VITE_APP_NETEASE_API_URL:'http://localhost:3000/'
 
@@ -33,9 +33,9 @@ axios.interceptors.response.use(
      * 这里对 response 和 error 不做任何处理，直接返回
      */
     if (response.data.code !== 200) {
-      // ElMessage.error(
-      //   `Code: ${response.data.code}, Message: ${response.data.msg}`,
-      // )
+      ElMessage.error(
+        `Code: ${response.data.code}, Message: ${response.data.msg}`,
+      )
     } else {
       return response.data
     }
@@ -44,9 +44,9 @@ axios.interceptors.response.use(
     if (error.response && error.response.data) {
       const code = error.response.status
       const msg = error.response.data.message
-      // ElMessage.error(`Code: ${code}, Message: ${msg}`)
+      ElMessage.error(`Code: ${code}, Message: ${msg}`)
     } else {
-      // ElMessage.error(`${error}`)
+      ElMessage.error(`${error}`)
     }
     return Promise.reject(error)
   },

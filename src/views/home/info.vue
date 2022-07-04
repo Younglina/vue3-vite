@@ -56,7 +56,6 @@ import { getPlaylistDetail } from '@/api/music.js'
 import { formatDate } from '@/utils/useTool.js'
 import { useRoute } from 'vue-router'
 import { onBeforeMount, ref } from 'vue'
-
 import SongList from '@/components/SongList.vue'
 
 onBeforeMount(() => {

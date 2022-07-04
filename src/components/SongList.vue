@@ -1,11 +1,11 @@
 <template>
-    <!-- v-infinite-scroll="loadmore"
-    infinite-scroll-disabled="disabled" -->
   <div
+    v-infinite-scroll="loadmore"
+    :infinite-scroll-disabled="disabled"
     class="song-list"
   >
     <div
-      v-for="item in currentSongList"
+      v-for="item in state.showList"
       :class="['playitem', currentId === item.id && 'current-song']"
       :key="item.id"
       @dblclick="handleDbclick(item)"
@@ -24,9 +24,9 @@
 </template>
 <script setup>
 import { onMounted, computed, ref, reactive, watch } from 'vue'
+import { usePinia } from '@/utils/usePinia.js'
+
 import LinkTo from '@/components/LinkTo.vue'
-import { getPlaylistById } from '@/api/music.js'
-import { formatSongs } from '@/utils/useTool.js'
 const props = defineProps({
   id: {
     type: String,
@@ -38,16 +38,15 @@ const props = defineProps({
   },
 })
 
-const currentSongList = ref([])
-onMounted(async () => {
+const pinia = usePinia()
+onMounted(() => {
   if (props.id) {
-      const { songs } = await getPlaylistById({ id: props.id })
-      currentSongList.value = formatSongs(songs)
+    pinia.setSongList(props.id)
   }
 })
 
 const songlist = computed(() => {
-  return props.list.length ? props.list : currentSongList
+  return props.list.length ? props.list : pinia.currentSongList
 })
 
 const state = reactive({
@@ -60,9 +59,10 @@ watch(songlist, val => {
   }
 })
 const noMore = ref(false)
-const disabled = computed(() => songlist.length <= 10 || noMore.value)
+const disabled = computed(() => songlist.value.length <= 10 || noMore.value)
 
 const loadmore = () => {
+  console.log(123)
   if (!songlist.value.length) return
   const step = ++state.step * 10
   state.showList = state.showList.concat(songlist.value.slice(step, step + 10))
@@ -70,10 +70,11 @@ const loadmore = () => {
 }
 
 const currentId = computed(() => {
-  return ''
+  return pinia.currentSong?.id
 })
 const handleDbclick = song => {
-  console.log(song)
+  pinia.setCurrentSongList(songlist.value)
+  // vueplayer.playSong(song)
 }
 </script>
 <style lang="scss" scoped>
